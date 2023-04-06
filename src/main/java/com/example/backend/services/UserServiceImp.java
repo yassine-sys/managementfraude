@@ -1,5 +1,6 @@
 package com.example.backend.services;
 
+import com.example.backend.dao.GroupRepository;
 import com.example.backend.dao.UserRepository;
 import com.example.backend.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import java.util.Optional;
 public class UserServiceImp implements UserService, UserDetailsService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GroupRepository grpRep;
 
     public UserServiceImp() {
     }
@@ -45,6 +48,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
             u.setIdCreateur(user.getIdCreateur());
             u.setNomUtilisateur(user.getNomUtilisateur());
             u.setUser_group(user.getUser_group());
+
         }
         return userRepository.save(u);
     }

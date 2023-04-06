@@ -1,9 +1,12 @@
 package com.example.backend.entities;
 
 import com.fasterxml.jackson.annotation.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name="function")
@@ -24,6 +27,12 @@ public class Function implements Serializable {
     @ManyToMany(mappedBy = "liste_function",cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Group> group;
+
+
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "function_reporting", joinColumns = @JoinColumn(name = "function_id") , inverseJoinColumns = @JoinColumn(name = "list_rep_id") , schema = "etl")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<RepRapport> listreprapport = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -55,5 +64,13 @@ public class Function implements Serializable {
 
     public void setSubModule(SubModule subModule) {
         this.subModule = subModule;
+    }
+
+    public List<RepRapport> getListreprapport() {
+        return listreprapport;
+    }
+
+    public void setListreprapport(List<RepRapport> listreprapport) {
+        this.listreprapport = listreprapport;
     }
 }

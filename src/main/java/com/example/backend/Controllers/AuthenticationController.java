@@ -69,7 +69,7 @@ public class AuthenticationController {
 
     @RequestMapping(value="/check", method = RequestMethod.GET)
     @Transactional
-    public ResponseEntity<?> test(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> test(@RequestParam(name = "token") String token) {
         if(token!=null){
             final User user = jwtTokenUtil.extractUser(token);
             final String username = jwtTokenUtil.getUsernameFromToken(token);
@@ -89,7 +89,7 @@ public class AuthenticationController {
 
     @RequestMapping(value="/loginResp", method = RequestMethod.GET)
     @Transactional
-    public User getUserData(@RequestHeader("Authorization") String token) {
+    public User getUserData(@RequestParam(name = "token") String token) {
         final Optional<User> user = userService.findByUsername(jwtTokenUtil.extractUser(token).getUsername());
         System.out.println(user.get().getUsername());
         if(token!=null){
@@ -100,6 +100,7 @@ public class AuthenticationController {
         }
 
     }
+
 
     public static final String endpoint = "http://ip-api.com/json";
 
