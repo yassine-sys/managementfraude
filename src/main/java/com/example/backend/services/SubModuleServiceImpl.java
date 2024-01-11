@@ -1,6 +1,7 @@
 package com.example.backend.services;
 
 import com.example.backend.dao.SubModuleRepository;
+import com.example.backend.entities.Function;
 import com.example.backend.entities.Module;
 import com.example.backend.entities.ResourceNotFoundException;
 import com.example.backend.entities.SubModule;
@@ -29,8 +30,8 @@ public class SubModuleServiceImpl implements SubModuleService{
     public void deleteSubModule(Long Id) {
 
         SubModule subModule = subModuleRepository.getOne(Id);
-        if (subModule != null)
-        {
+        if (subModule != null) {
+
             subModuleRepository.delete(subModule);
         }
 

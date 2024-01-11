@@ -1,7 +1,9 @@
 package com.example.backend.services;
 
+import com.example.backend.dao.FunctionRepository;
 import com.example.backend.dao.ModuleRepository;
 import com.example.backend.dao.SubModuleRepository;
+import com.example.backend.entities.Function;
 import com.example.backend.entities.Group;
 import com.example.backend.entities.Module;
 import com.example.backend.entities.SubModule;
@@ -21,6 +23,7 @@ public class ModuleServiceImpl implements ModuleService {
 
     ModuleRepository moduleRepository;
     SubModuleRepository subModuleRepository;
+    FunctionRepository functionRepository;
     public ModuleServiceImpl (ModuleRepository moduleRepository,SubModuleRepository subModuleRepository){
         this.subModuleRepository=subModuleRepository;
         this.moduleRepository=moduleRepository;
@@ -28,11 +31,11 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public Module addModule(Module module) {
         List<SubModule> subModules = new ArrayList<>();
-        for (SubModule subModule : module.getList_sub_modules()) {
-            SubModule existingSubModule = subModuleRepository.getOne(subModule.getId());
-            existingSubModule.setModule(module);
-            subModules.add(existingSubModule);
-        }
+//        for (SubModule subModule : module.getList_sub_modules()) {
+//            SubModule existingSubModule = subModuleRepository.getOne(subModule.getId());
+//            existingSubModule.setModule(module);
+//            subModules.add(existingSubModule);
+//        }
         module.setList_sub_modules(subModules);
         return moduleRepository.save(module);
     }
@@ -72,17 +75,31 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public void deleteModule(Long Id) {
-        Module module = moduleRepository.getOne(Id);
-        for (Group g: module.getGroup_module()) {
-            g.getModule_groups().remove(this);
-        }
-        if (module != null)
-        {
+    public void deleteModule(Long moduleId) {
+        Module module = moduleRepository.getOne(moduleId);
+        if (module != null) {
+            List<SubModule> subModules = module.getList_sub_modules();
+            for (SubModule subModule : subModules) {
+                List<Function> functions = subModule.getFunctions();
+                for (Function function : functions) {
+                    List<Group> groups = function.getGroup();
+                    for (Group group : groups) {
+                        group.getListe_function().remove(function);
+                        group.getModule_groups().remove(module);
+                    }
+                    function.setGroup(null);
+                }
+            }
+            module.setGroup_module(new ArrayList<>());
+            moduleRepository.save(module);
             moduleRepository.delete(module);
         }
-
     }
+
+
+
+
+
 
     @Override
     public Module findById(Long Id) {

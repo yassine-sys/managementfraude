@@ -93,11 +93,16 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.6.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.0.1</version>
+		</dependency>
 
 	</dependencies>
 
 	<build>
-		<finalName>springbootwildfly</finalName>
+		<finalName>reporting</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -133,7 +138,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<webResources>
 						<resource>
-							<directory>${project.basedir}/src/main/resources/static/reporting</directory>
+							<directory>${project.basedir}/src/main/resources/static/</directory>
 						</resource>
 					</webResources>
 				</configuration>
